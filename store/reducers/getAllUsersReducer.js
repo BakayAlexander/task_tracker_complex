@@ -3,7 +3,6 @@ import { GET_USERS_FAILURE, GET_USERS_REQUEST, GET_USERS_SUCCESS } from '../acti
 const initialState = {
   allUsersLoading: true,
   allUsersError: null,
-  totalPages: null,
   allUsers: null,
 };
 
@@ -19,8 +18,7 @@ const getAllUsersReducer = (state = initialState, action) => {
         ...state,
         allUsersLoading: false,
         allUsersError: null,
-        allUsers: action.res.data,
-        totalPages: action.res.total_pages,
+        allUsers: action.res,
       };
     case GET_USERS_FAILURE:
       return {

@@ -41,7 +41,10 @@ export const registerUser = data => {
       dispatch(createUserRequest());
       const response = await createUserWithEmailAndPassword(auth, data.email, data.password);
       await setDoc(doc(firestore, 'users', response.user.uid), {
-        ...data,
+        first_name: data.first_name,
+        last_name: data.last_name,
+        email: data.email,
+        avatar: data.avatar,
         id: response.user.uid,
       });
       dispatch(createUserSuccess(response.user));
@@ -64,7 +67,6 @@ export const loginUser = data => {
       const response = await signInWithEmailAndPassword(auth, data.email, data.password);
       const userData = await getDoc(doc(firestore, 'users', response.user.uid));
       dispatch(loginUserSuccess(userData.data()));
-
       return response;
     } catch (error) {
       console.log('Login failed: ', error);
