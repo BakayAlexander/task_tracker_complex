@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import { BiExit } from 'react-icons/bi';
-import { useDispatch } from 'react-redux';
-import { useRouter } from 'next/router';
-
-// import { logoutUser } from '../../store/actions/userActions';
-
-import styles from './header.module.css';
+import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 
+import { logoutUser } from '../../store/actions/userActions';
+
+import { defaultImageUrl, defaultUser } from '../../utils/constants';
+import styles from './header.module.css';
+
 const Header = () => {
-  // const dispatch = useDispatch();
-  const router = useRouter();
+  const dispatch = useDispatch();
+  const user = useSelector(state => state.user.user);
+  const [currentUser, setCurrentUser] = useState(defaultUser);
 
-  const initialState = {
-    first_name: 'Alexander',
-    last_name: 'Bakay',
-    avatar: 'https://reqres.in/img/faces/4-image.jpg',
-    id: '1',
-    email: 'bakay.dvr@gmail.com',
-  };
-
-  const [currentUser, setCurrentUser] = useState(initialState);
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user]);
 
   const handleLogoutUser = () => {
-    // dispatch(logoutUser());
-    router.push('/login');
+    dispatch(logoutUser());
   };
 
   return (
@@ -33,7 +29,7 @@ const Header = () => {
         href='/'
         className='link'
       >
-        Task Tracker
+        Complex Task Tracker
       </Link>
       <div className={styles.headerContainer}>
         <div className={styles.headerUserInfo}>
@@ -46,7 +42,7 @@ const Header = () => {
         >
           <img
             className={styles.headerUserImage}
-            src={currentUser.avatar}
+            src={currentUser.avatar || defaultImageUrl}
             alt='Profile icon'
           />
         </Link>

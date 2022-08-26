@@ -4,7 +4,7 @@ const Loader = () => {
   return (
     <svg
       role='status'
-      className={`m-auto h-7 w-7 animate-spin text-gray-200 dark:text-transparent fill-gray-300`}
+      className={`m-auto h-7 w-7 animate-spin text-gray-200 dark:text-transparent fill-gray-300 absolute top-1/2 left-1/2`}
       viewBox='0 0 100 101'
       fill='none'
       xmlns='http://www.w3.org/2000/svg'

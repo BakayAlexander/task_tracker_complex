@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout/Layout';
 import Head from 'next/head';
 import { logoutUser } from '../store/actions/userActions';
+import { defaultUser } from '../utils/constants';
 
 const Account = () => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const user = useSelector(state => state.user.user);
 
-  const initialState = {
-    first_name: 'Alexander',
-    last_name: 'Bakay',
-    avatar: 'https://reqres.in/img/faces/4-image.jpg',
-    id: '1',
-    email: 'bakay.dvr@gmail.com',
-  };
-  const [currentUser, setCurrentUser] = useState(initialState);
+  const [currentUser, setCurrentUser] = useState(defaultUser);
+
+  useEffect(() => {
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [user]);
 
   const handleLogoutUser = () => {
     dispatch(logoutUser());
