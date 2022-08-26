@@ -11,7 +11,7 @@ import Head from 'next/head';
 
 const Login: React.FC = () => {
   const router = useRouter();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   // const loginError = useSelector(state => state.user.loginUserError);
   // const isLoading = useSelector(state => state.user.loginUserLoading);
@@ -19,11 +19,7 @@ const Login: React.FC = () => {
   const initialValues = { email: '', password: '' };
 
   const handleSubmitLogin = (values: FormikValues) => {
-    // dispatch(
-    //   loginUser({
-    //     email: values.email,
-    //     password: values.password,
-    //   })
+    // dispatch(registerUser(values));
     // ).then(res => {
     //   if (res) {
     //     navigate('/');
@@ -46,8 +42,12 @@ const Login: React.FC = () => {
       </Head>
       <Formik
         initialValues={initialValues}
-        validate={values => validation(values)}
-        onSubmit={values => handleSubmitLogin(values)}
+        validate={() => ({})}
+        onSubmit={async (values, { setSubmitting }) => {
+          setSubmitting(false);
+          const res = await dispatch(registerUser(values));
+          if (res) router.push('/');
+        }}
       >
         <Form className='authForm'>
           <h1 className='authHeader'>Log in</h1>
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
             Have not registered yet?
             <button
               className='authLinkButton'
-              type='submit'
+              // type='submit'
               // disabled={isLoading}
               onClick={() => {
                 router.push('/register');

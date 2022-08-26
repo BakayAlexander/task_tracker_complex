@@ -1,11 +1,11 @@
 import React from 'react';
 import { AiOutlineMail } from 'react-icons/ai';
-import { User } from '../../typings';
+import { UserType } from '../../typings';
 
 import styles from './userCard.module.css';
 
 type UserCardProps = {
-  user: User;
+  user: UserType;
 };
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {

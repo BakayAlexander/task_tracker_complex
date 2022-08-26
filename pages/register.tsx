@@ -1,17 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-// import { loginUser } from '../../store/actions/userActions';
-
 import { FormikValuesRegister, validationRegister } from '../utils/validation';
-import Head from 'next/head';
+import { registerUser } from '../store/actions/userActions';
 
 const Register: React.FC = () => {
   const router = useRouter();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const initialValues = {
     email: '',
@@ -23,8 +22,8 @@ const Register: React.FC = () => {
 
   // const localToken = localStorage.getItem('token');
 
-  // const registerError = useSelector(state => state.user.createUserError);
-  // const isLoading = useSelector(state => state.user.createUserLoading);
+  const registerError = useSelector(state => state.user.createUserError);
+  const isLoading = useSelector(state => state.user.createUserLoading);
 
   // useEffect(() => {
   //   if (localToken) {
@@ -33,19 +32,11 @@ const Register: React.FC = () => {
   // }, []);
 
   const handleSubmitRegister = (values: FormikValuesRegister) => {
-    // dispatch(
-    //   registerUser({
-    //   email: values.email,
-    //   password: values.password,
-    //   first_name: values.first_name,
-    //   last_name: values.last_name,
-    //   avatar: values.avatar,
-    //   })
-    // ).then(res => {
-    //   if (res) {
-    //     navigate('/login');
-    //   }
-    // });
+    dispatch(registerUser(values)).then((res: boolean) => {
+      if (res) {
+        router.push('/login');
+      }
+    });
   };
 
   return (
@@ -138,18 +129,18 @@ const Register: React.FC = () => {
           <button
             className='authButton bg-[#9f546e] hover:bg-[#6a1633]'
             type='submit'
-            // disabled={isLoading}
+            disabled={isLoading}
           >
             Register
           </button>
-          {/* {registerError && <p className='authError text-center text-[17px]'>{registerError}</p>} */}
+          {registerError && <p className='authError text-center text-[17px]'>{registerError}</p>}
 
           <div className='text-[gray]'>
             Already a member?
             <button
               className='authLinkButton'
               type='submit'
-              // disabled={isLoading}
+              disabled={isLoading}
               onClick={() => {
                 router.push('/login');
               }}
