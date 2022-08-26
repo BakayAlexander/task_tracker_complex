@@ -1,5 +1,6 @@
 import React from 'react';
 import { AiOutlineMail } from 'react-icons/ai';
+import { defaultImageUrl } from '../../utils/constants';
 
 import styles from './userCard.module.css';
 
@@ -8,7 +9,7 @@ const UserCard = ({ user }) => {
     <div className={styles.userCardContainer}>
       <img
         className={styles.userCardImage}
-        src={user.avatar || ''}
+        src={user.avatar || defaultImageUrl}
         alt='Profile icon'
       />
       <div className={styles.userCardInfo}>

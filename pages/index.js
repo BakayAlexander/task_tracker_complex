@@ -1,16 +1,27 @@
 import Head from 'next/head';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../components/Layout/Layout';
+import Loader from '../components/Loader/Loader';
+import UserCard from '../components/UserCard/UserCard';
 import useCheckIsUserLoggedIn from '../hooks/useCheckUserLogin';
+import { getAllUsers } from '../store/actions/getAllUsersAction';
 
 const Home = () => {
-  // const allUsers = useSelector(state => state.allUsers.allUsers);
-  // const isLoading = useSelector(state => state.allUsers.allUsersLoading);
-  // const totalPages = useSelector(state => state.allUsers.totalPages);
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.allUsers.allUsers);
+  const isLoading = useSelector(state => state.allUsers.allUsersLoading);
+  const [allUsers, setAllUsers] = useState([]);
 
-  // useEffect(() => {
-  //   dispatch(getAllUsers());
-  // }, []);
+  useEffect(() => {
+    dispatch(getAllUsers());
+  }, []);
+
+  useEffect(() => {
+    if (users) {
+      setAllUsers(users);
+    }
+  }, [users]);
 
   return (
     <>
@@ -27,21 +38,18 @@ const Home = () => {
       </Head>
       <Layout>
         <div>
-          {/* {isLoading ? (
+          {isLoading ? (
             <Loader />
-          ) : ( */}
-          <section className='home'>
-            {/* {allUsers.map(user => (
-              <UserCard
-                key={user.id}
-                name={user.first_name}
-                surname={user.last_name}
-                email={user.email}
-                imageUrl={user.avatar}
-              />
-            ))} */}
-          </section>
-          {/* )} */}
+          ) : (
+            <section className='home'>
+              {allUsers.map(user => (
+                <UserCard
+                  user={user}
+                  key={user.id}
+                />
+              ))}
+            </section>
+          )}
         </div>
       </Layout>
     </>
