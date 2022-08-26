@@ -8,7 +8,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { FormikValuesRegister, validationRegister } from '../utils/validation';
 import { registerUser } from '../store/actions/userActions';
 
-const Register: React.FC = () => {
+const Register = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -20,19 +20,11 @@ const Register: React.FC = () => {
     avatar: '',
   };
 
-  // const localToken = localStorage.getItem('token');
-
   const registerError = useSelector(state => state.user.createUserError);
   const isLoading = useSelector(state => state.user.createUserLoading);
 
-  // useEffect(() => {
-  //   if (localToken) {
-  //     navigate('/');
-  //   }
-  // }, []);
-
-  const handleSubmitRegister = (values: FormikValuesRegister) => {
-    dispatch(registerUser(values)).then((res: boolean) => {
+  const handleSubmitRegister = values => {
+    dispatch(registerUser(values)).then(res => {
       if (res) {
         router.push('/login');
       }
@@ -139,7 +131,7 @@ const Register: React.FC = () => {
             Already a member?
             <button
               className='authLinkButton'
-              type='submit'
+              type='button'
               disabled={isLoading}
               onClick={() => {
                 router.push('/login');

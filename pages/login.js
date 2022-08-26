@@ -1,30 +1,29 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-// import { loginUser } from '../../store/actions/userActions';
+import { loginUser } from '../store/actions/userActions';
 
 import { FormikValues, validation } from '../utils/validation';
-import Head from 'next/head';
 
-const Login: React.FC = () => {
+const Login = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // const loginError = useSelector(state => state.user.loginUserError);
-  // const isLoading = useSelector(state => state.user.loginUserLoading);
+  const loginError = useSelector(state => state.user.loginUserError);
+  const isLoading = useSelector(state => state.user.loginUserLoading);
 
   const initialValues = { email: '', password: '' };
 
-  const handleSubmitLogin = (values: FormikValues) => {
-    // dispatch(registerUser(values));
-    // ).then(res => {
-    //   if (res) {
-    //     navigate('/');
-    //   }
-    // });
+  const handleSubmitLogin = values => {
+    dispatch(loginUser(values)).then(res => {
+      if (res) {
+        router.push('/');
+      }
+    });
   };
 
   return (
@@ -42,12 +41,8 @@ const Login: React.FC = () => {
       </Head>
       <Formik
         initialValues={initialValues}
-        validate={() => ({})}
-        onSubmit={async (values, { setSubmitting }) => {
-          setSubmitting(false);
-          const res = await dispatch(registerUser(values));
-          if (res) router.push('/');
-        }}
+        validate={values => validation(values)}
+        onSubmit={values => handleSubmitLogin(values)}
       >
         <Form className='authForm'>
           <h1 className='authHeader'>Log in</h1>
@@ -82,18 +77,18 @@ const Login: React.FC = () => {
           <button
             className='authButton'
             type='submit'
-            // disabled={isLoading}
+            disabled={isLoading}
           >
             Log in
           </button>
-          {/* {loginError && <p className='authError text-center text-[17px]'>{loginError}</p>} */}
+          {loginError && <p className='authError text-center text-[17px]'>{loginError}</p>}
 
           <div className='text-[gray]'>
             Have not registered yet?
             <button
               className='authLinkButton'
-              // type='submit'
-              // disabled={isLoading}
+              type='button'
+              disabled={isLoading}
               onClick={() => {
                 router.push('/register');
               }}

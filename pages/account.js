@@ -3,11 +3,10 @@ import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout/Layout';
 import Head from 'next/head';
+import { logoutUser } from '../store/actions/userActions';
 
-// import { logoutUser } from '../../store/actions/userActions';
-
-const Account: React.FC = () => {
-  // const dispatch = useDispatch();
+const Account = () => {
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const initialState = {
@@ -20,8 +19,7 @@ const Account: React.FC = () => {
   const [currentUser, setCurrentUser] = useState(initialState);
 
   const handleLogoutUser = () => {
-    // dispatch(logoutUser());
-    // navigate('/login');
+    dispatch(logoutUser());
   };
 
   return (

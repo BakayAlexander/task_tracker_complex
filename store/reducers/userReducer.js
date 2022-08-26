@@ -11,7 +11,6 @@ import {
 const initialState = {
   createUserLoading: false,
   createUserError: null,
-  token: null,
   loginUserLoading: false,
   loginUserError: null,
   user: null,
@@ -30,7 +29,6 @@ const usersReducer = (state = initialState, action) => {
         ...state,
         createUserLoading: false,
         createUserError: null,
-        token: action.res,
       };
     case CREATE_USER_FAILURE:
       return {
@@ -50,8 +48,7 @@ const usersReducer = (state = initialState, action) => {
         ...state,
         loginUserLoading: false,
         loginUserError: null,
-        user: action.res.user,
-        token: action.res.token,
+        user: action.res,
       };
     case LOGIN_USER_FAILURE:
       return {
@@ -64,7 +61,6 @@ const usersReducer = (state = initialState, action) => {
         ...state,
         loginUserError: null,
         loginUserLoading: false,
-        token: null,
         user: null,
       };
 

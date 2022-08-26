@@ -1,11 +1,9 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
+import { useDispatch } from 'react-redux';
 import Layout from '../components/Layout/Layout';
-import styles from '../styles/home.module.css';
+import useCheckIsUserLoggedIn from '../hooks/useCheckUserLogin';
 
-const Home: NextPage = () => {
-  // const dispatch = useDispatch();
-
+const Home = () => {
   // const allUsers = useSelector(state => state.allUsers.allUsers);
   // const isLoading = useSelector(state => state.allUsers.allUsersLoading);
   // const totalPages = useSelector(state => state.allUsers.totalPages);

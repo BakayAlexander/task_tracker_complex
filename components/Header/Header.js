@@ -7,9 +7,8 @@ import { useRouter } from 'next/router';
 
 import styles from './header.module.css';
 import Link from 'next/link';
-import { User } from '../../typings';
 
-const Header: React.FC = () => {
+const Header = () => {
   // const dispatch = useDispatch();
   const router = useRouter();
 

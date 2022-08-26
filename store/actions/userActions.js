@@ -1,9 +1,7 @@
-// import axiosApi from '../../utils/api/axiosApi';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut, User } from 'firebase/auth';
-import { collection, deleteDoc, doc, DocumentData, onSnapshot, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, DocumentData, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 
 import { auth, firestore } from '../../firebase/clientApp';
-import { UserType } from '../../typings';
 
 export const CREATE_USER_REQUEST = 'CREATE_USER_REQUEST';
 export const CREATE_USER_SUCCESS = 'CREATE_USER_SUCCESS';
@@ -37,46 +35,35 @@ export const loginUserFailure = error => ({
 
 export const logoutUserRequest = () => ({ type: LOGOUT_USER });
 
-export const registerUser = (data: UserType) => {
-  return async (dispatch: any) => {
+export const registerUser = data => {
+  return async dispatch => {
     try {
       dispatch(createUserRequest());
       const response = await createUserWithEmailAndPassword(auth, data.email, data.password);
-      console.log(response.user.accessToken);
-      //Add new user to collection
       await setDoc(doc(firestore, 'users', response.user.uid), {
         ...data,
         id: response.user.uid,
       });
-
-      //! Set token
-      //! Than set user
-      dispatch(createUserSuccess(response.user.accessToken));
+      dispatch(createUserSuccess(response.user));
       return true;
-    } catch (error: any) {
+    } catch (error) {
       console.log('Register failed: ', error);
       if (error.message) {
         dispatch(createUserFailure(error.message));
       } else {
-        dispatch(createUserFailure({ error: 'Network error or no internet' }));
+        dispatch(createUserFailure('Network error or no internet'));
       }
     }
   };
 };
 
-export const loginUser = (data: UserType) => {
+export const loginUser = data => {
   return async dispatch => {
     try {
       dispatch(loginUserRequest());
-      // const response = await axiosApi.post('/api/login', data);
-      //! This is a custom identification current user method. It exists only because of an api problems.
-      // const usersPageOne = await axiosApi.get(`/api/users?page=1`);
-      // const usersPageTwo = await axiosApi.get(`/api/users?page=1`);
-      // const allUsers = usersPageOne.data.data.concat(usersPageTwo.data.data);
-      // const currentUser = allUsers.filter(user => user.email === data.email)[0];
-      // localStorage.setItem('token', response.data.token);
-      // localStorage.setItem('user', JSON.stringify(currentUser));
-      // dispatch(loginUserSuccess({ token: response.data.token, user: currentUser }));
+      const response = await signInWithEmailAndPassword(auth, data.email, data.password);
+      const userData = await getDoc(doc(firestore, 'users', response.user.uid));
+      dispatch(loginUserSuccess(userData.data()));
 
       return response;
     } catch (error) {
@@ -84,7 +71,25 @@ export const loginUser = (data: UserType) => {
       if (error.message) {
         dispatch(loginUserFailure(error.message));
       } else {
-        dispatch(loginUserFailure({ error: 'Network error or no internet' }));
+        dispatch(loginUserFailure('Network error or no internet'));
+      }
+    }
+  };
+};
+
+export const getUserData = id => {
+  return async dispatch => {
+    try {
+      dispatch(loginUserRequest());
+      const userData = await getDoc(doc(firestore, 'users', id));
+      dispatch(loginUserSuccess(userData.data()));
+      return userData;
+    } catch (error) {
+      console.log('Get users data failed: ', error);
+      if (error.message) {
+        dispatch(loginUserFailure(error.message));
+      } else {
+        dispatch(loginUserFailure('Network error or no internet'));
       }
     }
   };
@@ -92,8 +97,7 @@ export const loginUser = (data: UserType) => {
 
 export const logoutUser = () => {
   return dispatch => {
+    signOut(auth);
     dispatch(logoutUserRequest());
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
   };
 };
